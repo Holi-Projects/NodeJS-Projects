@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+    
+    <title>Chat Forum</title>
+
+    <style>
+        body {
+        margin: 0;
+        font-family: sans-serif;
+        
+    }
+
+    form {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 50%;
+        display: flex;
+        box-sizing: border-box;
+        padding: 0.25rem;
+    }
+
+    form input {
+        border: 0;
+        padding: 0.5rem;
+        width: 100%;
+        outline: 0;
+        margin-right: 0.5rem;
+        border-radius: 0.25rem;
+        background: #ccc;
+    }
+
+    form button {
+        width: 6rem;
+        background-color: #1b8c00;
+        color: white;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        border-radius: 0.25rem;
+        text-transform: uppercase;
+    }
+
+    form button:hover {
+        background-color: #166d01;
+    }
+
+    #msg {
+        margin: 0;
+        padding: 0;
+        margin-bottom: 3rem;
+    }
+
+    #msg p {
+        padding: 0.5rem;
+       
+    }
+
+    #msg p:nth-of-type(odd) {
+        background: rgb(161, 156, 156);
+    }
+    </style>
+</head>
+
+
+
+<body>
+    <h1>Welcome to Vimo Chat</h1>
+    <div id="msg">
+
+    </div>
+    
+        <form >
+            <input type="text" id="input">
+            <!-- <input type="button" value="Send"> -->
+            <button>Send</button>
+        </form>
+    </div>
+    
+<!-- <script src="/socket.io/socket.io.js"></script>     -->
+<!-- <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>  -->
+<!-- <script src="chat.js"></script> -->
+<script>
+    
+const input = document.querySelector("#input")
+const chatForm = document.querySelector("form")
+const msgDisplay = document.querySelector("#msg")
+const socket = io();
+
+const name = prompt("Please enter your forum username: ")
+// const greet = "You have joined the chat as '" + name  + "'."
+//msgDisplay.append(greet)
+
+addChat("You have joined the chat as '" + name  + "'.")
+socket.emit("user_join", name);
+
+chatForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    addChat("<b>"+name+"</b>: " + input.value)
+    
+    socket.emit("chat_message", {
+        message: input.value
+    });
+
+    input.value = ''
+    return false
+},false)
+
+
+function addChat(msg){
+    if(msg == ''){
+        alert("Please enter message ):")
+    }
+    else {
+        const msgInput = document.createElement("p")
+        msgInput.innerHTML =  "<i>" +msg+"</i>"
+        msgDisplay.append(msgInput)
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+}
+
+socket.on("chat_message", function(data) {
+    addChat(data.name + ": " + data.message);
+});
+
+socket.on("user_join", function(data) {
+    addChat(data + " just joined the chat!");
+});
+
+socket.on("user_leave", function(data) {
+    if(data != null)
+    addChat(data + " has left the chat.");
+});
+
+	
+  </script>
+</body>
+
+</html>
