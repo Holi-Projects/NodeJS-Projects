@@ -2,7 +2,7 @@ const slackBot = require("slackbots")
 const channel = "general"
 
 const bot = new slackBot({
-    token: "xoxb-1114281541553-1114290817681-4holloiy00JthrhShhhVslLi",
+    token: "",
     name: "sappo"
 })
 
