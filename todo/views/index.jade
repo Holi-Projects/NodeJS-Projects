@@ -1,0 +1,46 @@
+
+extends layout
+
+block content
+    h1= title
+    form(action="/post", method="post")
+      input(type="text" name="task" placeholder="Enter Task")
+      button(type="submit") Add Task
+
+    br
+    br
+    div#msg= alert
+    
+
+    div
+      if list_items 
+        each item,i in list_items
+          p= item 
+            //- button#check(onclick='check(this)')
+            //-   i.fa.fa-check
+            //- button#btn(onclick='rm(this)')
+            //-   i.fa.fa-close 
+            button
+              a(href="/post/delete/" + i) 
+                i.fa.fa-close 
+            button(onclick='check(this)')
+              a(href="#")
+                i.fa.fa-check
+            
+
+      else 
+        p no items added
+    
+    button
+      a(href='/post/deleteAll') Clear List
+
+
+    //- function cl(arr){ arr.length = 0 }
+      //button Clear List #{cl(list_items)}
+      button( onclick= "cl('#{list_items}')" ) Clear List
+    //button(onclick='cl(lists)') Clear List
+    
+
+    script(src="javascripts/todo.js")
+    
+    
